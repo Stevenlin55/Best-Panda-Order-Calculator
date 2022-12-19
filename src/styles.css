@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.body {
+    padding-top: 6.5rem;
+  }
+
+a {
+    text-decoration: none;
+    color: #6c665c;
+}
+
+ 
+/*styling for navbar */
+.navbar {
+    margin-bottom: 200px;
+}
+.navbar-brand {
+    text-decoration: none;
+    font-size: 2.5rem;
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    text-align: center;
+    margin-left: 10px;
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+}
+
+.navbar-brand img {
+    margin-right: 5px;
+}
+
+.name {
+    color: red;
+}
+
+
+.navbar-light .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav {
+    font-size: 1.3rem;
+}
+
+.nav-link {
+    color: rgb(109, 175, 196);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    height: 100%;
+}
+
+.nav-link:hover {
+    border-bottom: 3px solid #00db80;
+    transition: all 0.2s ease-out;
+}
+
+.navbar-light .navbar-nav .nav-link:hover,.navbar-light .navbar-nav .nav-link:focus,.navbar-light .navbar-nav .nav-link:visited,.navbar-light .navbar-nav .nav-link:active  {
+    color: white;
+    border-bottom: 3px solid #00db80;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}
+
+  
+/*style hours chart */
+.business-hours {
+    padding: 25px;
+}
+
+.business-hours ul {
+    margin-left: 0
+}
+
+.business-hours li {
+    color: #888;
+    line-height: 50px;
+    border-bottom: 1px solid #333;
+    font-size: 0.86rem
+}
+
+.business-hours li:last-child {
+    border-bottom: none;
+}
+
+.business-hours .opening-hours li.today {
+    color: #00db80;
+}
+
+.pull-right {
+    float: right;
+}
+
+
+.menu-btn {
+    padding: 0.5rem 3rem;
+    color: #6c665c;
+}
+
+/* styling for accordion */
+.card-columns {
+    column-count: 3;
+}
+
+.card {
+    border: 2.3px solid #e6e6e6;
+}
+
+.accordion-button:not(.collapsed) {
+    color: black;
+    background-color: #2cd679;
+    box-shadow: inset 0 -1px 0 rgb(0 4 0 / 13%);
+}
+
+.accordion-button:focus {
+    z-index: 3;
+    border-color: #2cd679;
+    outline: 0;
+    box-shadow: 0 0 0 0rem rgb(13 110 253 / 25%);
+}
+
+.accordion-button {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.contact .box {
+    padding: 50px 30px;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    transition: all ease-in-out 0.3s;
+    height: 100%;
+}
+
+.contact .box span {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: #6c665c;
+}
+
+.contact .box h4 {
+    font-size: 1.18rem;
+    font-weight: 600;
+    padding: 0;
+    margin: 20px 0;
+    color: #6c665c;
+}
+
+.contact .box h5 {
+    color: #746f6f;
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.contact .box:hover {
+    background: #198754;
+    padding: 30px 30px 70px 30px;
+    box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.18);
+}
+
+.contact .box:hover span,
+.contact .box:hover h4,
+.contact .box:hover h5,
+.contact .box:hover a {
+    color: #fff;
+}
+
+.delivery-btn {
+    font-size: 1.2rem;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 992px){
+    .business-hours li {
+        font-size: 0.8rem
+    }
+}
+
+@media only screen and (max-width: 372px) {
+    .business-hours li {
+        font-size: 0.76rem
+    }
+    .contact .box h4 {
+        font-size: 1rem;
+    }
+    .contact .box h5 {
+        font-size: 0.8rem;
+    }
+    .delivery-btn {
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (max-width: 348px) {
+    .business-hours li {
+        font-size: 0.7rem
+    }
+    .contact .box h4 {
+        font-size: 0.9rem;
+    }
+    .contact .box h5 {
+        font-size: 0.9rem;
+    }
+    .delivery-btn {
+        font-size: 0.9rem;
+    }
+}
+
+@media only screen and (max-width: 336px) {
+    .navbar-brand {
+        font-size:2.3rem;
+    }
+}
+
+
+
+@media only screen and (max-width: 328px) {
+    .business-hours li {
+        font-size: 0.63rem
+    }
+    .contact .box h4 {
+        font-size: 0.8rem;
+    }
+    .contact .box h5 {
+        font-size: 0.8rem;
+    }
+    .delivery-btn {
+        font-size: 0.8rem;
+    }
+    .navbar-brand {
+        font-size:2.1rem;
+    }
+}
+
+
