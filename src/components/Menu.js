@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../styles.css";
 import Accordion from "./Accordion.js";
 import db from "./firebase.js";
-import chili from "./chili.png";
+import { Link } from "react-router-dom";
 export default class Menu extends Component {
   constructor(props) {
     super(props);
@@ -68,29 +68,21 @@ export default class Menu extends Component {
       <div>
         <div className="container">
           <div className="row">
-            <div className="col-lg-10 mx-auto col-12 text-center mb-3">
-              <h1 className="mt-0 text-dark">Our Menu</h1>
-              <p className="lead" style={{ color: "gray" }}>
-                Pricing and availability are subject to change
-              </p>
-              <div className="d-flex justify-content-center align-items-center">
-                <div style={{flex: 1}}></div>
-                <img
-                  src={chili}
-                  alt="Chili"
-                  width="50"
-                  height="52"
-                  className="d-incline-block float-left"
-                  style={{marginLeft:'-20px'}}
-                />{" "}
-                <div style={{marginLeft:'-15px'}}>indicates hot and spicy</div>
-                <div style={{flex: 1}}></div>
-              </div>
-            </div>
 
-            <div className="accordion" id="accordionPanelsStayOpenExample">
+            {/* Accordion */}
+            <div className="accordion mt-4 mb-5" id="accordionPanelsStayOpenExample">
               <Accordion categories={this.state.categories} />
             </div>
+
+            {/* View Order button */}
+            <div>
+              <Link to="/view-order">
+                <button className="btn btn-success btn-lg fixed-bottom">
+                  View Order
+                </button>   
+              </Link>
+            </div>
+
           </div>
         </div>
       </div>

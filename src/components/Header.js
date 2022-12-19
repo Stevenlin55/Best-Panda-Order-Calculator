@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/js/src/collapse.js";
 import logo from "./panda.png";
 import "../styles.css";
+
 export default class Header extends Component {
   // Mobile Devices: whenever link is clicked, navbar collapses
   collapseNavbar() {
@@ -52,19 +53,10 @@ export default class Header extends Component {
                 <li className="nav-item">
                   <Link
                     className="nav-link"
-                    to="/"
+                    to="/view-order"  
                     onClick={() => this.collapseNavbar()}
                   >
-                    Home
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/menu"
-                    onClick={() => this.collapseNavbar()}
-                  >
-                    Menu
+                    View Order
                   </Link>
                 </li>
               </ul>

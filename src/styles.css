@@ -65,40 +65,6 @@ a {
     text-align: center;
 }
 
-  
-/*style hours chart */
-.business-hours {
-    padding: 25px;
-}
-
-.business-hours ul {
-    margin-left: 0
-}
-
-.business-hours li {
-    color: #888;
-    line-height: 50px;
-    border-bottom: 1px solid #333;
-    font-size: 0.86rem
-}
-
-.business-hours li:last-child {
-    border-bottom: none;
-}
-
-.business-hours .opening-hours li.today {
-    color: #00db80;
-}
-
-.pull-right {
-    float: right;
-}
-
-
-.menu-btn {
-    padding: 0.5rem 3rem;
-    color: #6c665c;
-}
 
 /* styling for accordion */
 .card-columns {
@@ -127,51 +93,11 @@ a {
     font-weight: bold;
 }
 
-.contact .box {
-    padding: 50px 30px;
-    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-    transition: all ease-in-out 0.3s;
-    height: 100%;
+/* styling for view order button */
+#viewOrderBtn {
+    /* position: fixed; */
 }
 
-.contact .box span {
-    display: block;
-    font-size: 28px;
-    font-weight: 700;
-    color: #6c665c;
-}
-
-.contact .box h4 {
-    font-size: 1.18rem;
-    font-weight: 600;
-    padding: 0;
-    margin: 20px 0;
-    color: #6c665c;
-}
-
-.contact .box h5 {
-    color: #746f6f;
-    font-size: 15px;
-    margin: 0;
-    padding: 0;
-}
-
-.contact .box:hover {
-    background: #198754;
-    padding: 30px 30px 70px 30px;
-    box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.18);
-}
-
-.contact .box:hover span,
-.contact .box:hover h4,
-.contact .box:hover h5,
-.contact .box:hover a {
-    color: #fff;
-}
-
-.delivery-btn {
-    font-size: 1.2rem;
-}
 
 @media only screen and (min-width: 768px) and (max-width: 992px){
     .business-hours li {
