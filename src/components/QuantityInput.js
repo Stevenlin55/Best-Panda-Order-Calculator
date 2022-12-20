@@ -9,9 +9,14 @@ export default class QuantityInput extends Component {
     };
   }
 
-  // when the page loads for first time, make all items' quantity 0
+  // when the menu loads for first time, make all items' quantity 0
+  // if we are on ViewOrder page, the quantity will be set to the quantity of the item instead
   componentDidMount() {
-    this.props.item.quantity = 0;
+    if (this.props.item.quantity) {
+      this.setState({ quantity: this.props.item.quantity });
+    } else {
+      this.setState({ quantity: 0 });
+    }
   }
 
   // before the page unmounts, update the quantity of all items in parent component
@@ -21,17 +26,33 @@ export default class QuantityInput extends Component {
 
   handleQuantityChange = (event) => {
     this.setState({ quantity: event.target.value });
+    if (this.props.updateItemQuantity) {
+      this.props.updateItemQuantity(this.props.item, event.target.value);
+      this.props.updateTotal();
+    }
   };
 
   increaseQuantity = () => {
     this.setState({ quantity: this.state.quantity + 1 });
-    console.log(this.props.item.name, this.state.quantity);
+
+    // if we are on ViewOrder page, update the total
+    if (this.props.updateItemQuantity) {
+      this.props.updateItemQuantity(this.props.item, this.state.quantity + 1);
+      this.props.updateTotal();
+    }
   };
 
   decreaseQuantity = () => {
     if (this.state.quantity > 0) {
       this.setState({ quantity: this.state.quantity - 1 });
-      console.log(this.props.item.name, this.state.quantity);
+    }
+
+    // if we are on ViewOrder page, update the total
+    if (this.props.updateItemQuantity) {
+      if (this.state.quantity > 0) {
+        this.props.updateItemQuantity(this.props.item, this.state.quantity - 1);
+        this.props.updateTotal();
+      }
     }
   };
 
