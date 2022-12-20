@@ -111,7 +111,8 @@ class ViewOrder extends Component {
 
   removeItemFromState = (item, index) => {
     // remove the arbitrary price from the total
-    let numericalTotal = parseFloat(this.state.numericalTotal) - item.price;
+    let priceToRemove = item.price * item.quantity;
+    let numericalTotal = parseFloat(this.state.numericalTotal) - priceToRemove;
     // get rid of the added 0 before the decimal
     numericalTotal = parseFloat(numericalTotal).toFixed(2);
     // convert the total to a string with a dollar sign
@@ -144,67 +145,77 @@ class ViewOrder extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <ul className="list-group mb-2">
-                {/* map items and index to an li if only the name is not "Extra". If it is, just show the price */}
-                {this.state.items.map((item, index) => {
-                  if (item.name !== "Extra") {
-                    return (
-                      <li
-                        className="list-group-item d-flex justify-content-between align-items-center"
-                        key={index}
-                      >
-                        {item.name}
-                        <QuantityInput
-                          item={item}
-                          updateTotal={this.updateTotal}
-                          updateItemQuantity={this.updateItemQuantity}
-                        />
-                      </li>
-                    );
-                  } else {
-                    return (
-                      // have a trash icon that allows user to remove the arbitrary price from the total and from the state
-                      <li
-                        className="list-group-item d-flex justify-content-between align-items-center"
-                        key={index}
-                      >
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => {
-                            this.removeItemFromState(item, index);
-                          }}
-                        >
-                          <Trash />
-                        </button>
-                        {item.name}
-                        <div className="d-flex justify-content-between align-items-center">
-                          <span className="mr-4">${item.price}</span>
-                        </div>
-                      </li>
-                    );
-                  }
-                })}
-              </ul>
-              {/* create input that allows user to add arbitary price to the total */}
-              <form className="d-flex justify-content-between align-items-center">
-                <input
-                  type="number"
-                  name="Add"
-                  id="add"
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({ arbitraryPrice: e.target.value })
-                  }
-                />
-                <button
-                  className="btn btn-primary"
-                  onClick={this.addArbitraryPriceToTotal}
-                  type="submit"
-                >
-                  Add
-                </button>
-              </form>
+              <table>
+                <tbody>
+                    {/* map items and index to an li if only the name is not "Extra". If it is, just show the price */}
+                  {this.state.items.map((item, index) => {
+                    if (item.name !== "Extra") {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() =>
+                                this.removeItemFromState(item, index)
+                              }
+                            >
+                              <Trash />
+                            </button>
+                          </td>
+                          <td className="item-name">{item.name}</td>
+                          <td>
+                            <QuantityInput
+                              item={item}
+                              updateItemQuantity={this.updateItemQuantity}
+                              updateTotal={this.updateTotal}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    } else { 
+                      // if the item is "Extra", just show the trash button, name, and price
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() =>
+                                this.removeItemFromState(item, index)
+                              }
+                            >
+                              <Trash />
+                            </button>
+                          </td>
+                          <td className="item-name">{item.name}</td>
+                          <td className="item-price">${item.price}</td>
+                        </tr>
+                      );
+                    }
+                  })}
+                </tbody>
+              </table>
             </div>
+          </div>
+          <div className="row">
+            {/* create input that allows user to add arbitary price to the total */}
+            <form className="d-flex justify-content-between align-items-center">
+              <input
+                type="number"
+                name="Add"
+                id="add"
+                className="form-control"
+                onChange={(e) =>
+                  this.setState({ arbitraryPrice: e.target.value })
+                }
+              />
+              <button
+                className="btn btn-primary"
+                onClick={this.addArbitraryPriceToTotal}
+                type="submit"
+              >
+                Add
+              </button>
+            </form>
           </div>
         </div>
 

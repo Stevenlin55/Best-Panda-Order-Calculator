@@ -107,6 +107,11 @@ a {
     cursor: pointer;
 }
 
+.item-name, .item-price {
+    font-size: larger;
+    font-weight: bold;
+}
+
 
 @media only screen and (min-width: 768px) and (max-width: 992px){
     .business-hours li {
