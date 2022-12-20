@@ -94,10 +94,12 @@ a {
 }
 
 .quantity-input {
-    width: 3em;
+    width: 2.1em;
     margin-left: 0.2em;
     margin-right: 0.2em;
-
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
 }
 
 .up-arrow, .down-arrow {
@@ -110,6 +112,20 @@ a {
 .item-name, .item-price {
     font-size: larger;
     font-weight: bold;
+}
+
+#subtotal, #tax, #total {
+    margin-right: 1em;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#total, #total-price {
+    font-size: 1.5rem;
+}
+
+.price-values {
+    font-size: 1.2rem;
 }
 
 

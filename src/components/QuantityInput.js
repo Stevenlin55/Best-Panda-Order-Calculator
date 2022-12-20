@@ -28,7 +28,7 @@ export default class QuantityInput extends Component {
     this.setState({ quantity: event.target.value });
     if (this.props.updateItemQuantity) {
       this.props.updateItemQuantity(this.props.item, event.target.value);
-      this.props.updateTotal();
+      this.props.updateSubtotalTaxTotal();
     }
   };
 
@@ -38,7 +38,7 @@ export default class QuantityInput extends Component {
     // if we are on ViewOrder page, update the total
     if (this.props.updateItemQuantity) {
       this.props.updateItemQuantity(this.props.item, this.state.quantity + 1);
-      this.props.updateTotal();
+      this.props.updateSubtotalTaxTotal();
     }
   };
 
@@ -51,14 +51,14 @@ export default class QuantityInput extends Component {
     if (this.props.updateItemQuantity) {
       if (this.state.quantity > 0) {
         this.props.updateItemQuantity(this.props.item, this.state.quantity - 1);
-        this.props.updateTotal();
+        this.props.updateSubtotalTaxTotal();
       }
     }
   };
 
   render() {
     return (
-      <div className="quantity d-flex justify-content-end align-items-center">
+      <div className="quantity d-flex justify-content-end align-items-center mx-1">
         <ArrowDownSquare
           className="down-arrow"
           onClick={this.decreaseQuantity}

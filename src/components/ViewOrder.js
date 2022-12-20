@@ -10,10 +10,14 @@ class ViewOrder extends Component {
     super(props);
     this.state = {
       items: [],
-      numericalTotal: 0,
-      stringTotal: "",
+      numericalSubtotal: 0,
+      stringSubtotal: "",
       loading: true,
       arbitraryPrice: 0,
+      numericalTotal: 0,
+      stringTotal: "",
+      tax: 0,
+      stringTax: ""
     };
   }
 
@@ -35,21 +39,37 @@ class ViewOrder extends Component {
       items[i].price = parseFloat(items[i].price.substring(1));
     }
 
-    // calculate the total
-    let numericalTotal = this.calculateTotal(items);
+    // calculate the subtotal
+    let numericalSubtotal = this.calculateSubtotal(items);
 
     // convert the total to a string with a dollar sign
+    let stringSubtotal = "$" + numericalSubtotal;
+
+    // calculate the total with 9% tax
+    let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+    numericalTotal = numericalTotal.toFixed(2);
     let stringTotal = "$" + numericalTotal;
-    console.log(stringTotal);
+
+    // calculate the tax by subtracting the subtotal from the total
+    let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+    tax = tax.toFixed(2);
+
+    // convert the tax to a string with a dollar sign
+    let stringTax = "$" + tax;
+
     this.setState({
       items: items,
+      numericalSubtotal: numericalSubtotal,
+      stringSubtotal: stringSubtotal,
+      loading: false,
       numericalTotal: numericalTotal,
       stringTotal: stringTotal,
-      loading: false,
+      tax: tax,
+      stringTax: stringTax
     });
   }
 
-  calculateTotal(items) {
+  calculateSubtotal(items) {
     let total = 0;
     // keep total to 2 decimal places
     for (let i = 0; i < items.length; i++) {
@@ -59,13 +79,33 @@ class ViewOrder extends Component {
     return total;
   }
 
-  updateTotal = () => {
-    // go through the items and calculate the total
-    let numericalTotal = this.calculateTotal(this.state.items);
-    console.log(numericalTotal);
+  updateSubtotalTaxTotal = () => {
+    // go through the items and calculate the subtotal
+    let numericalSubtotal = this.calculateSubtotal(this.state.items);
+    console.log(numericalSubtotal);
+    let stringSubtotal = "$" + numericalSubtotal;
+
+    // calculate the total with 9% tax
+    let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+    numericalTotal = numericalTotal.toFixed(2);
     let stringTotal = "$" + numericalTotal;
 
-    this.setState({ numericalTotal: numericalTotal, stringTotal: stringTotal });
+    // calculate the tax by subtracting the subtotal from the total
+    let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+    tax = tax.toFixed(2);
+
+    // convert the tax to a string with a dollar sign
+    let stringTax = "$" + tax;
+
+    this.setState({
+      numericalSubtotal: numericalSubtotal,
+      stringSubtotal: stringSubtotal,
+      numericalTotal: numericalTotal,
+      stringTotal: stringTotal,
+      tax: tax,
+      stringTax: stringTax
+    });
+    
   };
 
   updateItemQuantity = (item, quantity) => {
@@ -88,12 +128,25 @@ class ViewOrder extends Component {
     // convert the value to a number
     console.log("price", price);
     // add the price to the total and keep it to 2 decimal places
-    let numericalTotal = parseFloat(this.state.numericalTotal) + price;
+    let numericalSubtotal = parseFloat(this.state.numericalSubtotal) + price;
     // get rid of the added 0 before the decimal
-    numericalTotal = parseFloat(numericalTotal).toFixed(2);
+    numericalSubtotal = parseFloat(numericalSubtotal).toFixed(2);
     // convert the total to a string with a dollar sign
-    console.log("numerical", numericalTotal);
+    console.log("numerical", numericalSubtotal);
+    let stringSubtotal = "$" + numericalSubtotal;
+
+    // calculate the total with 9% tax
+    let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+    numericalTotal = numericalTotal.toFixed(2);
     let stringTotal = "$" + numericalTotal;
+
+    // calculate the tax by subtracting the subtotal from the total
+    let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+    tax = tax.toFixed(2);
+
+    // convert the tax to a string with a dollar sign
+    let stringTax = "$" + tax;
+
 
     // add the arbitrary price as an item to the state
     let items = this.state.items;
@@ -104,27 +157,51 @@ class ViewOrder extends Component {
 
     this.setState({
       items: items,
+      numericalSubtotal: numericalSubtotal,
+      stringSubtotal: stringSubtotal,
       numericalTotal: numericalTotal,
       stringTotal: stringTotal,
+      tax: tax,
+      stringTax: stringTax
     });
+
   };
 
   removeItemFromState = (item, index) => {
     // remove the arbitrary price from the total
     let priceToRemove = item.price * item.quantity;
-    let numericalTotal = parseFloat(this.state.numericalTotal) - priceToRemove;
+    let numericalSubtotal = parseFloat(this.state.numericalSubtotal) - priceToRemove;
     // get rid of the added 0 before the decimal
-    numericalTotal = parseFloat(numericalTotal).toFixed(2);
+    numericalSubtotal = parseFloat(numericalSubtotal).toFixed(2);
     // convert the total to a string with a dollar sign
+    let stringSubtotal = "$" + numericalSubtotal;
+
+    // calculate the total with 9% tax
+    let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+    numericalTotal = numericalTotal.toFixed(2);
     let stringTotal = "$" + numericalTotal;
+
+    // calculate the tax by subtracting the subtotal from the total
+    let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+    tax = tax.toFixed(2);
+
+    // convert the tax to a string with a dollar sign
+    let stringTax = "$" + tax;
+
     // remove the arbitrary price from the state
     let items = this.state.items;
     items.splice(index, 1);
+
     this.setState({
       items: items,
+      numericalSubtotal: numericalSubtotal,
+      stringSubtotal: stringSubtotal,
       numericalTotal: numericalTotal,
       stringTotal: stringTotal,
+      tax: tax,
+      stringTax: stringTax
     });
+    
   };
 
   render() {
@@ -167,7 +244,7 @@ class ViewOrder extends Component {
                             <QuantityInput
                               item={item}
                               updateItemQuantity={this.updateItemQuantity}
-                              updateTotal={this.updateTotal}
+                              updateSubtotalTaxTotal={this.updateSubtotalTaxTotal}
                             />
                           </td>
                         </tr>
@@ -209,7 +286,7 @@ class ViewOrder extends Component {
                 }
               />
               <button
-                className="btn btn-primary"
+                className="btn btn-success"
                 onClick={this.addArbitraryPriceToTotal}
                 type="submit"
               >
@@ -219,18 +296,33 @@ class ViewOrder extends Component {
           </div>
         </div>
 
-        {/* show the total */}
-        <div>
-          <h1 className="text-center">Total: {this.state.stringTotal}</h1>
+        {/* show the subtotal, tax, and total on the right side of screen and wrapped in divs with their numbers */}
+        <div className="container my-4">
+          <div className="row">
+            {/* show the stuff on the right of screen like a receipt */}
+            <div className="d-flex justify-content-end">
+              <h5 id="subtotal">Subtotal</h5>
+              <h5 className="price-values">{this.state.stringSubtotal}</h5>
+            </div>
+            <div className="d-flex justify-content-end">
+              <h5 id="tax">Tax</h5>
+              <h5 className="price-values">{this.state.stringTax}</h5>
+            </div>
+            <div className="d-flex justify-content-end">
+              <h5 id="total">Total</h5>
+              <h5 className="price-values" id="total-price">{this.state.stringTotal}</h5>
+            </div>
+          </div>
         </div>
-
+        
+           
         <div className="row">
           <div className="col-12">
             <Link
               to={{
                 pathname: "/",
               }}
-              className="btn btn-primary btn-block"
+              className="btn btn-success btn-block"
             >
               Back to Menu
             </Link>
