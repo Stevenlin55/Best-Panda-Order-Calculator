@@ -36,7 +36,10 @@ export default class Menu extends Component {
     try {
       for (let i = 0; i < this.state.categories.length; i++) {
         //loop through all the categories
-        const snapshot = await db.collection(this.state.categories[i].name).orderBy("number").get(); //get snapshot of all categories and order the items by their number
+        const snapshot = await db
+          .collection(this.state.categories[i].name)
+          .orderBy("number")
+          .get(); //get snapshot of all categories and order the items by their number
         this.state.categories[i].items = snapshot.docs.map((doc) => ({
           //update the state's categories' items from snapshot
           name: doc.id,
@@ -68,21 +71,27 @@ export default class Menu extends Component {
       <div>
         <div className="container">
           <div className="row">
-
             {/* Accordion */}
-            <div className="accordion mt-4 mb-5" id="accordionPanelsStayOpenExample">
+            <div
+              className="accordion mt-4 mb-5"
+              id="accordionPanelsStayOpenExample"
+            >
               <Accordion categories={this.state.categories} />
             </div>
 
             {/* View Order button */}
             <div>
-              <Link to="/view-order">
+              <Link
+                to={{
+                  pathname: "/view-order",
+                  state: { categories: this.state.categories }, //pass the categories to the next page
+                }}
+              >
                 <button className="btn btn-success btn-lg fixed-bottom">
                   View Order
-                </button>   
+                </button>
               </Link>
             </div>
-
           </div>
         </div>
       </div>

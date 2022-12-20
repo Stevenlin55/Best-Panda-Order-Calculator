@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../styles.css";
+import QuantityInput from "./QuantityInput";
 export default class Accordion extends Component {
   renderItems(category) {
     if (category.items) {
@@ -7,12 +8,11 @@ export default class Accordion extends Component {
       return category.items.map((item, index) => (
         <div key={index} className="col-sm-6">
           <div key={index} className="card">
-            <div className="card-body">
+            <div className="card-body d-flex justify-content-between align-items-center">
               <h5 className="card-title fw-bold">
                 {item.name}
-                {/* TODO: buttons for each item here */}
-                <span className="pull-right fw-bold">{item.price}</span>
               </h5>
+              <QuantityInput item={item} />
             </div>
           </div>
         </div>
