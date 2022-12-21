@@ -59,17 +59,17 @@ export default class QuantityInput extends Component {
   render() {
     return (
       <div className="quantity d-flex justify-content-end align-items-center mx-1">
-        <ArrowDownSquare
-          className="down-arrow"
-          onClick={this.decreaseQuantity}
-        />
+        <ArrowUpSquare className="up-arrow" onClick={this.increaseQuantity} />
         <input
           type="number"
           className="form-control quantity-input"
           value={this.state.quantity}
           onChange={this.handleQuantityChange}
         />
-        <ArrowUpSquare className="up-arrow" onClick={this.increaseQuantity} />
+        <ArrowDownSquare
+          className="down-arrow"
+          onClick={this.decreaseQuantity}
+        />
       </div>
     );
   }

@@ -82,7 +82,6 @@ class ViewOrder extends Component {
   updateSubtotalTaxTotal = () => {
     // go through the items and calculate the subtotal
     let numericalSubtotal = this.calculateSubtotal(this.state.items);
-    console.log(numericalSubtotal);
     let stringSubtotal = "$" + numericalSubtotal;
 
     // calculate the total with 9% tax
@@ -126,13 +125,11 @@ class ViewOrder extends Component {
     // get the value of the input named "Add"
     let price = parseFloat(this.state.arbitraryPrice);
     // convert the value to a number
-    console.log("price", price);
     // add the price to the total and keep it to 2 decimal places
     let numericalSubtotal = parseFloat(this.state.numericalSubtotal) + price;
     // get rid of the added 0 before the decimal
     numericalSubtotal = parseFloat(numericalSubtotal).toFixed(2);
     // convert the total to a string with a dollar sign
-    console.log("numerical", numericalSubtotal);
     let stringSubtotal = "$" + numericalSubtotal;
 
     // calculate the total with 9% tax
