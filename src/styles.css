@@ -91,6 +91,11 @@ a {
 .accordion-button {
     font-size: 1.2rem;
     font-weight: bold;
+    padding: 0.6rem 1.2rem;
+}
+
+#view-order-btn {
+    height: 3.4rem;
 }
 
 .quantity-input {
@@ -126,6 +131,10 @@ a {
 
 .price-values {
     font-size: 1.2rem;
+}
+
+.card-body {
+    padding: 0.5rem 0.5rem;
 }
 
 

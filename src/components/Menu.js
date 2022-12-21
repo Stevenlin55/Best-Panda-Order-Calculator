@@ -73,7 +73,7 @@ export default class Menu extends Component {
           <div className="row">
             {/* Accordion */}
             <div
-              className="accordion mt-4 mb-5"
+              className="accordion mb-5"
               id="accordionPanelsStayOpenExample"
             >
               <Accordion categories={this.state.categories} />
@@ -87,7 +87,7 @@ export default class Menu extends Component {
                   state: { categories: this.state.categories }, //pass the categories to the next page
                 }}
               >
-                <button className="btn btn-success btn-lg fixed-bottom">
+                <button className="btn btn-success btn-lg fixed-bottom" id="view-order-btn">
                   View Order
                 </button>
               </Link>
