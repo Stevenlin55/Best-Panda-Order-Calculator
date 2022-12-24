@@ -9,13 +9,24 @@ export default class QuantityInput extends Component {
     };
   }
 
-  // when the menu loads for first time, make all items' quantity 0
+  // when the menu loads for first time, make all items' quantity 0, unless there is a saved order with quantity
   // if we are on ViewOrder page, the quantity will be set to the quantity of the item instead
   componentDidMount() {
     if (this.props.item.quantity) {
       this.setState({ quantity: this.props.item.quantity });
     } else {
-      this.setState({ quantity: 0 });
+      // check if session storage has a saved order
+      if (sessionStorage.getItem("savedOrder")) {
+        let savedOrder = JSON.parse(sessionStorage.getItem("savedOrder"));
+        // if the saved order has the same item, set the quantity to the saved order's quantity
+        for (let i = 0; i < savedOrder.length; i++) {
+          if (savedOrder[i].name === this.props.item.name) {
+            this.setState({ quantity: savedOrder[i].quantity });
+          }
+        }
+      } else {
+        this.setState({ quantity: 0 });
+      }
     }
   }
 
@@ -30,6 +41,16 @@ export default class QuantityInput extends Component {
       this.props.updateItemQuantity(this.props.item, event.target.value);
       this.props.updateSubtotalTaxTotal();
     }
+    // take care of the case where there is a savedOrder in sessionStorage 
+    if (sessionStorage.getItem("savedOrder")) {
+      let savedOrder = JSON.parse(sessionStorage.getItem("savedOrder"));
+      for (let i = 0; i < savedOrder.length; i++) {
+        if (savedOrder[i].name === this.props.item.name) {
+          savedOrder[i].quantity = event.target.value;
+          sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
+        }
+      }
+    }
   };
 
   increaseQuantity = () => {
@@ -39,6 +60,28 @@ export default class QuantityInput extends Component {
     if (this.props.updateItemQuantity) {
       this.props.updateItemQuantity(this.props.item, this.state.quantity + 1);
       this.props.updateSubtotalTaxTotal();
+    }
+
+    // take care of the case where there is a savedOrder in sessionStorage
+    // if the saved order does not have the same item, add the item to the saved order and set its quantity to 1
+    if (sessionStorage.getItem("savedOrder")) {
+      let savedOrder = JSON.parse(sessionStorage.getItem("savedOrder"));
+      let found = false;
+      for (let i = 0; i < savedOrder.length; i++) {
+        if (savedOrder[i].name === this.props.item.name) {
+          savedOrder[i].quantity = this.state.quantity + 1;
+          sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
+          found = true;
+        }
+      }
+      if (!found) {
+        savedOrder.push({
+          name: this.props.item.name,
+          price: this.props.item.price,
+          quantity: 1,
+        });
+        sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
+      }
     }
   };
 
@@ -54,22 +97,40 @@ export default class QuantityInput extends Component {
         this.props.updateSubtotalTaxTotal();
       }
     }
+
+    // take care of the case where there is a savedOrder in sessionStorage. 
+    // if the quantity of a saved item is 0, remove the item from the saved order
+    if (sessionStorage.getItem("savedOrder")) {
+      let savedOrder = JSON.parse(sessionStorage.getItem("savedOrder"));
+      for (let i = 0; i < savedOrder.length; i++) {
+        if (savedOrder[i].name === this.props.item.name) {
+          if (this.state.quantity > 0) {
+            savedOrder[i].quantity = this.state.quantity - 1;
+            sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
+            if (savedOrder[i].quantity === 0) {
+              savedOrder.splice(i, 1);
+              sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
+            }
+          } 
+        }
+      }
+    }
   };
 
   render() {
     return (
       <div className="quantity d-flex justify-content-end align-items-center mx-1">
-        <ArrowUpSquare className="up-arrow" onClick={this.increaseQuantity} />
+        <ArrowDownSquare
+          className="down-arrow"
+          onClick={this.decreaseQuantity}
+        />
         <input
           type="number"
           className="form-control quantity-input"
           value={this.state.quantity}
           onChange={this.handleQuantityChange}
         />
-        <ArrowDownSquare
-          className="down-arrow"
-          onClick={this.decreaseQuantity}
-        />
+        <ArrowUpSquare className="up-arrow" onClick={this.increaseQuantity} />
       </div>
     );
   }

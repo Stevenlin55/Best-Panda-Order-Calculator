@@ -17,56 +17,89 @@ class ViewOrder extends Component {
       numericalTotal: 0,
       stringTotal: "",
       tax: 0,
-      stringTax: ""
+      stringTax: "",
+      savedOrderBtnClicked: false,
     };
   }
 
   componentDidMount() {
-    let items = [];
-    let categories = this.props.location.state.categories;
-
-    // go through each category and add individual items to the state if they have a quantity greater than 0
-    for (let i = 0; i < categories.length; i++) {
-      for (let j = 0; j < categories[i].items.length; j++) {
-        if (categories[i].items[j].quantity > 0) {
-          items.push(categories[i].items[j]);
+    // if there is a saved order from sessionStorage, load it
+    if (sessionStorage.getItem("savedOrder")) {
+      let savedOrder = JSON.parse(sessionStorage.getItem("savedOrder"));
+      // go through savedOrder and if the price is a string, then convert it to a number by removing the dollar sign
+      for (let i = 0; i < savedOrder.length; i++) {
+        if (typeof savedOrder[i].price === "string") {
+          savedOrder[i].price = parseFloat(savedOrder[i].price.slice(1));
         }
       }
+
+      // calculate subtotal, total, and tax of saved order
+      let numericalSubtotal = this.calculateSubtotal(savedOrder);
+      let stringSubtotal = "$" + numericalSubtotal;
+      let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+      numericalTotal = numericalTotal.toFixed(2);
+      let stringTotal = "$" + numericalTotal;
+      let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+      tax = tax.toFixed(2);
+      let stringTax = "$" + tax;
+
+      this.setState({
+        items: savedOrder,
+        numericalSubtotal: numericalSubtotal,
+        stringSubtotal: stringSubtotal,
+        numericalTotal: numericalTotal,
+        stringTotal: stringTotal,
+        tax: tax,
+        stringTax: stringTax,
+        loading: false,
+      });
+    } else {
+      let items = [];
+      let categories = this.props.location.state.categories;
+
+      // go through each category and add individual items to the state if they have a quantity greater than 0
+      for (let i = 0; i < categories.length; i++) {
+        for (let j = 0; j < categories[i].items.length; j++) {
+          if (categories[i].items[j].quantity > 0) {
+            items.push(categories[i].items[j]);
+          }
+        }
+      }
+
+      // go through items and convert the price from string to a number after removing the dollar sign
+      for (let i = 0; i < items.length; i++) {
+        items[i].price = parseFloat(items[i].price.substring(1));
+      }
+
+      // calculate the subtotal
+      let numericalSubtotal = this.calculateSubtotal(items);
+
+      // convert the total to a string with a dollar sign
+      let stringSubtotal = "$" + numericalSubtotal;
+
+      // calculate the total with 9% tax
+      let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+      numericalTotal = numericalTotal.toFixed(2);
+      let stringTotal = "$" + numericalTotal;
+
+      // calculate the tax by subtracting the subtotal from the total
+      let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+      tax = tax.toFixed(2);
+
+      // convert the tax to a string with a dollar sign
+      let stringTax = "$" + tax;
+
+      this.setState({
+        items: items,
+        numericalSubtotal: numericalSubtotal,
+        stringSubtotal: stringSubtotal,
+        loading: false,
+        numericalTotal: numericalTotal,
+        stringTotal: stringTotal,
+        tax: tax,
+        stringTax: stringTax,
+      });
     }
-
-    // go through items and convert the price from string to a number after removing the dollar sign
-    for (let i = 0; i < items.length; i++) {
-      items[i].price = parseFloat(items[i].price.substring(1));
-    }
-
-    // calculate the subtotal
-    let numericalSubtotal = this.calculateSubtotal(items);
-
-    // convert the total to a string with a dollar sign
-    let stringSubtotal = "$" + numericalSubtotal;
-
-    // calculate the total with 9% tax
-    let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
-    numericalTotal = numericalTotal.toFixed(2);
-    let stringTotal = "$" + numericalTotal;
-
-    // calculate the tax by subtracting the subtotal from the total
-    let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
-    tax = tax.toFixed(2);
-
-    // convert the tax to a string with a dollar sign
-    let stringTax = "$" + tax;
-
-    this.setState({
-      items: items,
-      numericalSubtotal: numericalSubtotal,
-      stringSubtotal: stringSubtotal,
-      loading: false,
-      numericalTotal: numericalTotal,
-      stringTotal: stringTotal,
-      tax: tax,
-      stringTax: stringTax
-    });
   }
 
   calculateSubtotal(items) {
@@ -102,9 +135,8 @@ class ViewOrder extends Component {
       numericalTotal: numericalTotal,
       stringTotal: stringTotal,
       tax: tax,
-      stringTax: stringTax
+      stringTax: stringTax,
     });
-    
   };
 
   updateItemQuantity = (item, quantity) => {
@@ -144,7 +176,6 @@ class ViewOrder extends Component {
     // convert the tax to a string with a dollar sign
     let stringTax = "$" + tax;
 
-
     // add the arbitrary price as an item to the state
     let items = this.state.items;
     items.push({ name: "Extra", price: price, quantity: 1 });
@@ -159,15 +190,15 @@ class ViewOrder extends Component {
       numericalTotal: numericalTotal,
       stringTotal: stringTotal,
       tax: tax,
-      stringTax: stringTax
+      stringTax: stringTax,
     });
-
   };
 
   removeItemFromState = (item, index) => {
     // remove the arbitrary price from the total
     let priceToRemove = item.price * item.quantity;
-    let numericalSubtotal = parseFloat(this.state.numericalSubtotal) - priceToRemove;
+    let numericalSubtotal =
+      parseFloat(this.state.numericalSubtotal) - priceToRemove;
     // get rid of the added 0 before the decimal
     numericalSubtotal = parseFloat(numericalSubtotal).toFixed(2);
     // convert the total to a string with a dollar sign
@@ -196,9 +227,46 @@ class ViewOrder extends Component {
       numericalTotal: numericalTotal,
       stringTotal: stringTotal,
       tax: tax,
-      stringTax: stringTax
+      stringTax: stringTax,
     });
-    
+  };
+
+  saveOrder = () => {
+    // add items to local storage and call it savedOrder
+    sessionStorage.setItem("savedOrder", JSON.stringify(this.state.items));
+
+    //set the state of savedOrderBtnClicked to true
+    this.setState({ savedOrderBtnClicked: true });
+
+    // change save order button to green background color by changing class name to "btn btn-success"
+    document.getElementById("saveOrderBtn").className = "btn btn-success";
+    // change the text of the button to "Saved"
+    document.getElementById("saveOrderBtn").innerHTML = "SAVED";
+  };
+
+  clearOrder = () => {
+    // clear the session storage
+    sessionStorage.clear();
+    // clear the state for everything except the loading state
+    this.setState({
+      items: [],
+      numericalSubtotal: 0,
+      stringSubtotal: "$0",
+      numericalTotal: 0,
+      stringTotal: "$0",
+      tax: 0,
+      stringTax: "$0",
+      arbitraryPrice: "",
+      savedOrderBtnClicked: false,
+    });
+  }
+
+
+  handleBackToMenu = () => {
+    // if the user did not clcik the "Save Order" button, clear the session storage
+    if (!this.state.savedOrderBtnClicked) {
+      this.clearOrder();
+    }
   };
 
   render() {
@@ -210,62 +278,72 @@ class ViewOrder extends Component {
           role="status"
         >
           <span className="sr-only"></span>
+          <h1> Loading</h1>
         </div>
       );
     }
-    // return a list of items with their quantity and price
     return (
+      // return a list of items with their quantity and price
       <div>
         <div className="container">
           <div className="row">
             <div className="col-12">
               <table>
                 <tbody>
-                    {/* map items and index to an li if only the name is not "Extra". If it is, just show the price */}
-                  {this.state.items.map((item, index) => {
-                    if (item.name !== "Extra") {
-                      return (
-                        <tr key={index}>
-                          <td>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() =>
-                                this.removeItemFromState(item, index)
-                              }
-                            >
-                              <Trash />
-                            </button>
-                          </td>
-                          <td className="item-name">{item.name}</td>
-                          <td>
-                            <QuantityInput
-                              item={item}
-                              updateItemQuantity={this.updateItemQuantity}
-                              updateSubtotalTaxTotal={this.updateSubtotalTaxTotal}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    } else { 
-                      // if the item is "Extra", just show the trash button, name, and price
-                      return (
-                        <tr key={index}>
-                          <td>
-                            <button
-                              className="btn btn-danger"
-                              onClick={() =>
-                                this.removeItemFromState(item, index)
-                              }
-                            >
-                              <Trash />
-                            </button>
-                          </td>
-                          <td className="item-name">{item.name}</td>
-                          <td className="item-price">${item.price}</td>
-                        </tr>
-                      );
-                    }
-                  })}
+                  {/* first check if array exists */}
+                  {/* map items and index to an li if only the name is not "Extra". If it is, just show the price */}
+                  {this.state.items && this.state.items.length > 0 ? (
+                    this.state.items.map((item, index) => {
+                      if (item.name !== "Extra") {
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <button
+                                className="btn btn-danger"
+                                onClick={() =>
+                                  this.removeItemFromState(item, index)
+                                }
+                              >
+                                <Trash />
+                              </button>
+                            </td>
+                            <td className="item-name">{item.name}</td>
+                            <td>
+                              <QuantityInput
+                                item={item}
+                                updateItemQuantity={this.updateItemQuantity}
+                                updateSubtotalTaxTotal={
+                                  this.updateSubtotalTaxTotal
+                                }
+                              />
+                            </td>
+                          </tr>
+                        );
+                      } else {
+                        // if the item is "Extra", just show the trash button, name, and price
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <button
+                                className="btn btn-danger"
+                                onClick={() =>
+                                  this.removeItemFromState(item, index)
+                                }
+                              >
+                                <Trash />
+                              </button>
+                            </td>
+                            <td className="item-name">{item.name}</td>
+                            <td className="item-price">${item.price}</td>
+                          </tr>
+                        );
+                      }
+                    })
+                  ) : (
+                    <tr>
+                      <td>No items in cart</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -307,22 +385,35 @@ class ViewOrder extends Component {
             </div>
             <div className="d-flex justify-content-end">
               <h5 id="total">Total</h5>
-              <h5 className="price-values" id="total-price">{this.state.stringTotal}</h5>
+              <h5 className="price-values" id="total-price">
+                {this.state.stringTotal}
+              </h5>
             </div>
-          </div>
-        </div>
-        
-           
-        <div className="row">
-          <div className="col-12">
-            <Link
-              to={{
-                pathname: "/",
-              }}
-              className="btn btn-success btn-block"
-            >
-              Back to Menu
-            </Link>
+            <div className="d-flex justify-content-between">
+              {/* clear order button */}
+              <button className="btn btn-danger" onClick={this.clearOrder}>
+                CLEAR
+              </button>
+              <button 
+              // make button white with black text and black border
+                className="btn btn-light btn-block text-dark border-dark"
+                id="saveOrderBtn"
+                onClick={this.saveOrder}
+              >
+                SAVE ORDER
+              </button>
+            </div>
+            {/* back to menu button */}
+            <div>
+              <Link
+                to="/"
+                className="btn btn-primary btn-block border-dark w-100 mt-5"
+                onClick={this.handleBackToMenu}
+
+              >
+                BACK TO MENU
+              </Link>
+              </div>
           </div>
         </div>
       </div>

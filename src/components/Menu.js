@@ -29,7 +29,7 @@ export default class Menu extends Component {
     };
   }
   componentDidMount() {
-    this.fetchDataFromFirebase(); //when page loads, fetch from firebase
+      this.fetchDataFromFirebase(); //when page loads, fetch from firebase. 
   }
 
   async fetchDataFromFirebase() {
@@ -41,7 +41,7 @@ export default class Menu extends Component {
           .orderBy("number")
           .get(); //get snapshot of all categories and order the items by their number
         this.state.categories[i].items = snapshot.docs.map((doc) => ({
-          //update the state's categories' items from snapshot
+          //update the state's categories' items from snapshot and if there is a item from saved order, set the quantity to the saved order's quantity
           name: doc.id,
           price: doc.data().price,
           details: doc.data().description,
@@ -72,10 +72,7 @@ export default class Menu extends Component {
         <div className="container">
           <div className="row">
             {/* Accordion */}
-            <div
-              className="accordion mb-5"
-              id="accordionPanelsStayOpenExample"
-            >
+            <div className="accordion mb-5" id="accordionPanelsStayOpenExample">
               <Accordion categories={this.state.categories} />
             </div>
 
@@ -87,7 +84,10 @@ export default class Menu extends Component {
                   state: { categories: this.state.categories }, //pass the categories to the next page
                 }}
               >
-                <button className="btn btn-success btn-lg fixed-bottom" id="view-order-btn">
+                <button
+                  className="btn btn-success btn-lg fixed-bottom"
+                  id="view-order-btn"
+                >
                   View Order
                 </button>
               </Link>

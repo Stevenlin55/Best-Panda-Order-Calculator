@@ -4,7 +4,7 @@ import QuantityInput from "./QuantityInput";
 export default class Accordion extends Component {
   renderItems(category) {
     if (category.items) {
-      //if we have all the items of the categories, show the cards for each item
+      //if we have all the items of the categories, show the cards for each item. 
       return category.items.map((item, index) => (
         <div key={index} className="col-sm-6">
           <div key={index} className="card">
