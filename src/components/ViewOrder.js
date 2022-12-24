@@ -55,15 +55,11 @@ class ViewOrder extends Component {
       });
     } else {
       let items = [];
-      let categories = this.props.location.state.categories;
-
-      // go through each category and add individual items to the state if they have a quantity greater than 0
-      for (let i = 0; i < categories.length; i++) {
-        for (let j = 0; j < categories[i].items.length; j++) {
-          if (categories[i].items[j].quantity > 0) {
-            items.push(categories[i].items[j]);
-          }
-        }
+      
+      // go through items in the cart in currentOrder in sessionStorage and add them to the items array
+      let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+      for (let i = 0; i < currentOrder.length; i++) {
+        items.push(currentOrder[i]);
       }
 
       // go through items and convert the price from string to a number after removing the dollar sign
@@ -179,6 +175,11 @@ class ViewOrder extends Component {
     // add the arbitrary price as an item to the state
     let items = this.state.items;
     items.push({ name: "Extra", price: price, quantity: 1 });
+    // add the item to the currentOrder in sessionStorage
+    let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+    currentOrder.push({ name: "Extra", price: price, quantity: 1 });
+    sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+
 
     // clear the input
     document.getElementById("add").value = "";
@@ -220,6 +221,11 @@ class ViewOrder extends Component {
     let items = this.state.items;
     items.splice(index, 1);
 
+    // remove the item from the currentOrder in sessionStorage
+    let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+    currentOrder.splice(index, 1);
+    sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+
     this.setState({
       items: items,
       numericalSubtotal: numericalSubtotal,
@@ -232,8 +238,9 @@ class ViewOrder extends Component {
   };
 
   saveOrder = () => {
-    // add items to local storage and call it savedOrder
-    sessionStorage.setItem("savedOrder", JSON.stringify(this.state.items));
+    // add currentOrder in session storage to savedOrder in session storage
+    let savedOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+    sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
 
     //set the state of savedOrderBtnClicked to true
     this.setState({ savedOrderBtnClicked: true });

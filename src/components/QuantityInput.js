@@ -51,6 +51,25 @@ export default class QuantityInput extends Component {
         }
       }
     }
+
+    // take care of the case where there is a currentOrder in sessionStorage
+    if (sessionStorage.getItem("currentOrder")) {
+      let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+      for (let i = 0; i < currentOrder.length; i++) {
+        if (currentOrder[i].name === this.props.item.name) {
+          currentOrder[i].quantity = event.target.value;
+          sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+        }
+      }
+    } else {
+      let currentOrder = [];
+      currentOrder.push({
+        name: this.props.item.name,
+        price: this.props.item.price,
+        quantity: event.target.value,
+      });
+      sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+    }
   };
 
   increaseQuantity = () => {
@@ -83,6 +102,36 @@ export default class QuantityInput extends Component {
         sessionStorage.setItem("savedOrder", JSON.stringify(savedOrder));
       }
     }
+
+    // take care of the case where there is a currentOrder in sessionStorage
+    // if the current order does not have the same item, add the item to the current order and set its quantity to 1
+    if (sessionStorage.getItem("currentOrder")) {
+      let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+      let found = false;
+      for (let i = 0; i < currentOrder.length; i++) {
+        if (currentOrder[i].name === this.props.item.name) {
+          currentOrder[i].quantity = this.state.quantity + 1;
+          sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+          found = true;
+        }
+      }
+      if (!found) {
+        currentOrder.push({
+          name: this.props.item.name,
+          price: this.props.item.price,
+          quantity: 1,
+        });
+        sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+      }
+    } else {
+      let currentOrder = [];
+      currentOrder.push({
+        name: this.props.item.name,
+        price: this.props.item.price,
+        quantity: 1,
+      });
+      sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+    }
   };
 
   decreaseQuantity = () => {
@@ -114,6 +163,32 @@ export default class QuantityInput extends Component {
           } 
         }
       }
+    }
+
+    // take care of the case where there is a currentOrder in sessionStorage.
+    // if the quantity of a current item is 0, remove the item from the current order
+    if (sessionStorage.getItem("currentOrder")) {
+      let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+      for (let i = 0; i < currentOrder.length; i++) {
+        if (currentOrder[i].name === this.props.item.name) {
+          if (this.state.quantity > 0) {
+            currentOrder[i].quantity = this.state.quantity - 1;
+            sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+            if (currentOrder[i].quantity === 0) {
+              currentOrder.splice(i, 1);
+              sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
+            }
+          } 
+        }
+      }
+    } else {
+      let currentOrder = [];
+      currentOrder.push({
+        name: this.props.item.name,
+        price: this.props.item.price,
+        quantity: 0,
+      });
+      sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
     }
   };
 
