@@ -417,7 +417,7 @@ class ViewOrder extends Component {
             <div>
               <Link
                 to="/"
-                className="btn btn-primary btn-block border-dark w-100 mt-5"
+                className="btn btn-primary btn-block border-dark w-100 mt-3"
                 onClick={this.handleBackToMenu}
               >
                 BACK TO MENU
