@@ -55,47 +55,52 @@ class ViewOrder extends Component {
       });
     } else {
       let items = [];
-      
+
       // go through items in the cart in currentOrder in sessionStorage and add them to the items array
-      let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
-      for (let i = 0; i < currentOrder.length; i++) {
-        items.push(currentOrder[i]);
+      if (sessionStorage.getItem("currentOrder")) {
+        let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
+        for (let i = 0; i < currentOrder.length; i++) {
+          items.push(currentOrder[i]);
+        }
+
+        // go through items and convert the price from string to a number after removing the dollar sign
+        for (let i = 0; i < items.length; i++) {
+          items[i].price = parseFloat(items[i].price.substring(1));
+        }
+
+        // calculate the subtotal
+        let numericalSubtotal = this.calculateSubtotal(items);
+
+        // convert the total to a string with a dollar sign
+        let stringSubtotal = "$" + numericalSubtotal;
+
+        // calculate the total with 9% tax
+        let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
+        numericalTotal = numericalTotal.toFixed(2);
+        let stringTotal = "$" + numericalTotal;
+
+        // calculate the tax by subtracting the subtotal from the total
+        let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
+        tax = tax.toFixed(2);
+
+        // convert the tax to a string with a dollar sign
+        let stringTax = "$" + tax;
+
+        this.setState({
+          items: items,
+          numericalSubtotal: numericalSubtotal,
+          stringSubtotal: stringSubtotal,
+          loading: false,
+          numericalTotal: numericalTotal,
+          stringTotal: stringTotal,
+          tax: tax,
+          stringTax: stringTax,
+        });
+      } else {
+        // take the user back to the menu page if there is no current order
+        this.props.history.push("/");
       }
-
-      // go through items and convert the price from string to a number after removing the dollar sign
-      for (let i = 0; i < items.length; i++) {
-        items[i].price = parseFloat(items[i].price.substring(1));
-      }
-
-      // calculate the subtotal
-      let numericalSubtotal = this.calculateSubtotal(items);
-
-      // convert the total to a string with a dollar sign
-      let stringSubtotal = "$" + numericalSubtotal;
-
-      // calculate the total with 9% tax
-      let numericalTotal = parseFloat(numericalSubtotal) * 1.09;
-      numericalTotal = numericalTotal.toFixed(2);
-      let stringTotal = "$" + numericalTotal;
-
-      // calculate the tax by subtracting the subtotal from the total
-      let tax = parseFloat(numericalTotal) - parseFloat(numericalSubtotal);
-      tax = tax.toFixed(2);
-
-      // convert the tax to a string with a dollar sign
-      let stringTax = "$" + tax;
-
-      this.setState({
-        items: items,
-        numericalSubtotal: numericalSubtotal,
-        stringSubtotal: stringSubtotal,
-        loading: false,
-        numericalTotal: numericalTotal,
-        stringTotal: stringTotal,
-        tax: tax,
-        stringTax: stringTax,
-      });
-    }
+    } 
   }
 
   calculateSubtotal(items) {
@@ -179,7 +184,6 @@ class ViewOrder extends Component {
     let currentOrder = JSON.parse(sessionStorage.getItem("currentOrder"));
     currentOrder.push({ name: "Extra", price: price, quantity: 1 });
     sessionStorage.setItem("currentOrder", JSON.stringify(currentOrder));
-
 
     // clear the input
     document.getElementById("add").value = "";
@@ -266,8 +270,7 @@ class ViewOrder extends Component {
       arbitraryPrice: "",
       savedOrderBtnClicked: false,
     });
-  }
-
+  };
 
   handleBackToMenu = () => {
     // if the user did not clcik the "Save Order" button, clear the session storage
@@ -401,8 +404,8 @@ class ViewOrder extends Component {
               <button className="btn btn-danger" onClick={this.clearOrder}>
                 CLEAR
               </button>
-              <button 
-              // make button white with black text and black border
+              <button
+                // make button white with black text and black border
                 className="btn btn-light btn-block text-dark border-dark"
                 id="saveOrderBtn"
                 onClick={this.saveOrder}
@@ -416,11 +419,10 @@ class ViewOrder extends Component {
                 to="/"
                 className="btn btn-primary btn-block border-dark w-100 mt-5"
                 onClick={this.handleBackToMenu}
-
               >
                 BACK TO MENU
               </Link>
-              </div>
+            </div>
           </div>
         </div>
       </div>
