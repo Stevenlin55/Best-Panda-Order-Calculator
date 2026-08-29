@@ -188,7 +188,9 @@ export default function Menu() {
     const query = search.trim().toLowerCase();
     return allItems.filter((item) => {
       const matchesCategory =
-        activeCategory === "All" || item.category === activeCategory;
+        activeCategory === "All" ||
+        (activeCategory === "In order" && Boolean(quantityById[item.id])) ||
+        item.category === activeCategory;
       const matchesSearch =
         !query ||
         item.name.toLowerCase().includes(query) ||
@@ -196,7 +198,7 @@ export default function Menu() {
         item.description.toLowerCase().includes(query);
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, allItems, search]);
+  }, [activeCategory, allItems, quantityById, search]);
 
   function updateQuantity(item, quantity) {
     setOrderItems((items) => setOrderItemQuantity(items, item, quantity));
@@ -225,10 +227,13 @@ export default function Menu() {
     setOrderItems([]);
     setOrderNote("");
     setStartedAt(Date.now());
+    setActiveCategory("All");
     setOrderOpen(false);
     sessionStorage.removeItem("currentOrder");
     sessionStorage.removeItem("savedOrder");
-    searchRef.current && searchRef.current.focus();
+    if (window.matchMedia("(min-width: 881px)").matches) {
+      searchRef.current && searchRef.current.focus();
+    }
   }
 
   const startedLabel = new Date(startedAt).toLocaleTimeString([], {
@@ -256,35 +261,36 @@ export default function Menu() {
             <span className="shortcut-hint"><kbd>/</kbd> Search</span>
           </div>
 
-          <label className="order-search">
-            <span className="search-icon" aria-hidden="true">⌕</span>
-            <span className="sr-only">Search menu</span>
-            <input
-              ref={searchRef}
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search dishes, categories, or ingredients"
-              autoFocus
-            />
-            {search && (
-              <button type="button" onClick={() => setSearch("")} aria-label="Clear search">
-                ×
-              </button>
-            )}
-          </label>
+          <div className="menu-controls">
+            <label className="order-search">
+              <span className="search-icon" aria-hidden="true">⌕</span>
+              <span className="sr-only">Search menu</span>
+              <input
+                ref={searchRef}
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search the menu"
+              />
+              {search && (
+                <button type="button" onClick={() => setSearch("")} aria-label="Clear search">
+                  ×
+                </button>
+              )}
+            </label>
 
-          <div className="category-tabs" aria-label="Menu categories">
-            {["All", ...CATEGORY_NAMES].map((category) => (
-              <button
-                type="button"
-                key={category}
-                className={activeCategory === category ? "active" : ""}
-                onClick={() => setActiveCategory(category)}
-              >
-                {category}
-              </button>
-            ))}
+            <div className="category-tabs" aria-label="Menu categories">
+              {["All", "In order", ...CATEGORY_NAMES].map((category) => (
+                <button
+                  type="button"
+                  key={category}
+                  className={activeCategory === category ? "active" : ""}
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
 
           {loading && (
@@ -306,7 +312,9 @@ export default function Menu() {
             <>
               <div className="result-count">
                 <strong>{filteredItems.length}</strong> menu items
-                {activeCategory !== "All" && <> in {activeCategory}</>}
+                {activeCategory === "In order"
+                  ? " currently in the order"
+                  : activeCategory !== "All" && <> in {activeCategory}</>}
               </div>
               <div className="dish-grid">
                 {filteredItems.map((item) => {

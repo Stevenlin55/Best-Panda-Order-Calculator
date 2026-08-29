@@ -1,6 +1,6 @@
 {
-  "short_name": "Best Panda",
-  "name": "Create React App Sample",
+  "short_name": "Order Desk",
+  "name": "Best Panda Order Desk",
   "icons": [
     {
       "src": "panda.ico",
@@ -18,8 +18,10 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait-primary",
+  "theme_color": "#0d2f20",
+  "background_color": "#f3f5f2"
 }
