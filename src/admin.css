@@ -466,6 +466,58 @@
   cursor: wait;
 }
 
+.price-confirmation {
+  margin-top: 13px;
+  border: 1px solid #e8c7c3;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff7f5;
+}
+
+.price-confirmation p {
+  margin: 0 2px 10px;
+  color: #71302b;
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.price-confirmation p strong {
+  font-weight: 900;
+}
+
+.price-confirmation > div {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 8px;
+}
+
+.keep-editing-button,
+.confirm-price-button {
+  min-height: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.keep-editing-button {
+  border: 1px solid #d9c6c3;
+  background: #fff;
+  color: #71302b;
+}
+
+.confirm-price-button {
+  border: 0;
+  background: #c53c31;
+  color: #fff;
+}
+
+.keep-editing-button:disabled,
+.confirm-price-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .price-save-toast,
 .price-error-toast {
   position: fixed;
@@ -561,4 +613,3 @@
     transition: none;
   }
 }
-

@@ -17,6 +17,7 @@ export default function MenuAdmin() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [editingItem, setEditingItem] = useState(null);
   const [draftPrice, setDraftPrice] = useState("");
+  const [confirmingPrice, setConfirmingPrice] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [lastChange, setLastChange] = useState(null);
@@ -83,6 +84,7 @@ export default function MenuAdmin() {
   function openEditor(item) {
     setEditingItem(item);
     setDraftPrice(item.price.toFixed(2));
+    setConfirmingPrice(null);
     setSaveError("");
   }
 
@@ -90,6 +92,7 @@ export default function MenuAdmin() {
     if (saving) return;
     setEditingItem(null);
     setDraftPrice("");
+    setConfirmingPrice(null);
     setSaveError("");
   }
 
@@ -108,10 +111,11 @@ export default function MenuAdmin() {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Change ${editingItem.name} from ${formatCurrency(editingItem.price)} to ${formatCurrency(nextPrice)}?`
-    );
-    if (!confirmed) return;
+    if (confirmingPrice !== nextPrice) {
+      setConfirmingPrice(nextPrice);
+      setSaveError("");
+      return;
+    }
 
     setSaving(true);
     setSaveError("");
@@ -134,6 +138,7 @@ export default function MenuAdmin() {
       setLastChange(change);
       setEditingItem(null);
       setDraftPrice("");
+      setConfirmingPrice(null);
     } catch (error) {
       setSaveError("That price did not save. Check the connection and try again.");
     } finally {
@@ -305,14 +310,40 @@ export default function MenuAdmin() {
                 step="0.01"
                 inputMode="decimal"
                 value={draftPrice}
-                onChange={(event) => setDraftPrice(event.target.value)}
+                onChange={(event) => {
+                  setDraftPrice(event.target.value);
+                  setConfirmingPrice(null);
+                  setSaveError("");
+                }}
                 aria-label={`New price for ${editingItem.name}`}
               />
             </label>
             {saveError && <p className="price-save-error" role="alert">{saveError}</p>}
-            <button type="submit" className="save-price-button" disabled={saving}>
-              {saving ? "Saving…" : `Save ${formatCurrency(parsePrice(draftPrice))}`}
-            </button>
+            {confirmingPrice ? (
+              <div className="price-confirmation" role="alert">
+                <p>
+                  Change from <strong>{formatCurrency(editingItem.price)}</strong> to{" "}
+                  <strong>{formatCurrency(confirmingPrice)}</strong>?
+                </p>
+                <div>
+                  <button
+                    type="button"
+                    className="keep-editing-button"
+                    onClick={() => setConfirmingPrice(null)}
+                    disabled={saving}
+                  >
+                    Keep editing
+                  </button>
+                  <button type="submit" className="confirm-price-button" disabled={saving}>
+                    {saving ? "Saving…" : "Confirm save"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button type="submit" className="save-price-button" disabled={saving}>
+                {saving ? "Saving…" : `Save ${formatCurrency(parsePrice(draftPrice))}`}
+              </button>
+            )}
           </form>
         </>
       )}
