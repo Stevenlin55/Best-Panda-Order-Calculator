@@ -1,69 +1,33 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/js/src/collapse.js";
+import React from "react";
 import logo from "./panda.png";
-import "../styles.css";
 
-export default class Header extends Component {
-  // Mobile Devices: whenever link is clicked, navbar collapses
-  collapseNavbar() {
-    let navbar = document.getElementById("navbarSupportedContent");
-    let navbarButton = document.getElementById("navbar-btn");
-    navbar.className = "navbar-collapse collapse";
-    navbarButton.className = "navbar-toggler collapsed";
-  }
-
-  render() {
-    return (
-      <div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-success fixed-top">
-          <div className="container-fluid">
-            <Link
-              className="navbar-brand d-flex justify-content-between align-items-center"
-              to="/"
-              onClick={() => this.collapseNavbar()}
-            >
-              <img
-                src={logo}
-                alt="Logo"
-                width="50"
-                height="52"
-                className="d-inline-block"
-              />
-              <div className="ml-5 name">Best Panda</div>
-            </Link>
-            <button
-              className="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-              id="navbar-btn"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div
-              className="collapse navbar-collapse"
-              id="navbarSupportedContent"
-            >
-              <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/view-order"  
-                    onClick={() => this.collapseNavbar()}
-                  >
-                    View Order
-                  </Link>
-                </li>
-              </ul>
-            </div>
+export default function Header({ itemCount, total, onOpenOrder, onNewOrder }) {
+  return (
+    <header className="desk-header">
+      <div className="desk-header-inner">
+        <div className="desk-brand">
+          <img src={logo} alt="" width="50" height="50" />
+          <div>
+            <strong>Best Panda</strong>
+            <span>Order Desk</span>
           </div>
-        </nav>
+        </div>
+
+        <div className="desk-status">
+          <span className="save-status"><i /> Autosaved locally</span>
+          <a href="/admin/menu" className="header-price-link" aria-label="Edit menu prices">
+            <span>Prices</span>
+            <b aria-hidden="true">$</b>
+          </a>
+          <button type="button" className="header-new-order" onClick={onNewOrder}>
+            New order
+          </button>
+          <button type="button" className="header-order-button" onClick={onOpenOrder}>
+            <span>{itemCount} {itemCount === 1 ? "item" : "items"}</span>
+            <strong>{total}</strong>
+          </button>
+        </div>
       </div>
-    );
-  }
+    </header>
+  );
 }
