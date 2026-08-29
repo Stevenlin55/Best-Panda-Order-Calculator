@@ -15,6 +15,10 @@ export default function Header({ itemCount, total, onOpenOrder, onNewOrder }) {
 
         <div className="desk-status">
           <span className="save-status"><i /> Autosaved locally</span>
+          <a href="/admin/menu" className="header-price-link" aria-label="Edit menu prices">
+            <span>Prices</span>
+            <b aria-hidden="true">$</b>
+          </a>
           <button type="button" className="header-new-order" onClick={onNewOrder}>
             New order
           </button>

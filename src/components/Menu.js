@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import db from "./firebase";
 import Header from "./Header";
+import { CATEGORY_NAMES } from "../menuConfig";
 import {
   calculateTotals,
   formatCurrency,
@@ -11,25 +12,6 @@ import {
 import "../styles.css";
 
 const STORAGE_KEY = "bestPandaOrderDeskV4";
-const CATEGORY_NAMES = [
-  "Appetizer",
-  "Soup",
-  "Chop Suey",
-  "Egg Foo Young",
-  "Poultry",
-  "Roast Pork",
-  "Shrimp",
-  "Beef",
-  "Vegetable",
-  "Fried Rice",
-  "Lo Mein",
-  "Chow Mein Fun",
-  "House Specialties",
-  "Daily Special",
-  "Lunch Menu",
-  "Side Orders",
-];
-
 function loadInitialOrder() {
   try {
     const current = JSON.parse(localStorage.getItem(STORAGE_KEY));

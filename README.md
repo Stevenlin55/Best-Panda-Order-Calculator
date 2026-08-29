@@ -26,3 +26,16 @@ npm start
 
 The calculator reads menu data from Firestore but does not write orders back to
 Firestore.
+
+## Menu price manager
+
+Open `/admin/menu` or use the **Prices** button in the Order Desk header. The
+mobile price manager can search and filter every dish, update its Firestore
+`price` field after a before-and-after confirmation, and undo the most recent
+change.
+
+The price manager intentionally has no sign-in because it is designed for
+link-based family access. The current Firestore rules allow anonymous updates,
+so anyone who discovers the page or database endpoint can change prices. Add
+Firebase Authentication and restricted write rules if that access model ever
+needs to change.

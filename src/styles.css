@@ -126,7 +126,8 @@ input:focus-visible {
 }
 
 .header-new-order,
-.header-order-button {
+.header-order-button,
+.header-price-link {
   min-height: 42px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 11px;
@@ -136,6 +137,25 @@ input:focus-visible {
   cursor: pointer;
   font-size: 0.76rem;
   font-weight: 800;
+}
+
+.header-price-link {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 11px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.header-price-link b {
+  display: none;
 }
 
 .header-new-order:hover {
@@ -1095,6 +1115,28 @@ input:focus-visible {
 
   .header-order-button span {
     display: none;
+  }
+
+  .desk-status {
+    gap: 7px;
+  }
+
+  .header-price-link {
+    width: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+  }
+
+  .header-price-link span {
+    display: none;
+  }
+
+  .header-price-link b {
+    display: inline;
+    font-size: 0.9rem;
   }
 
   .order-search input {
